@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+    body{
+        background: #f9f9f9;
+    }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex align-item-center justify-content-between pt-5">
+                <h1>Profile</h1>
+                <div>
+                    <a href="{% url 'logout' %}" class="btn btn-success">Logout</a>
+                    <a href="{% url 'changepassword' %}" class="btn btn-success">Change Password</a>
+                </div>
+            </div>
+            <p style="font-size:20px;">Welcome in Lampros.Tech ,your employee id: <b>{{name}}</b></p>
+        <table class="table table-bordered bg-white">
+            <tr>
+                <th>Name</th>
+                <th>Contact.No</th>
+                <th>Email</th>
+                <th>Designation</th>
+                <th>Department</th>
+                <th>Jobs</th>
+                <th>Date of Joining</th>
+            </tr>
+            <tr>
+                <td>{{emp_data.name}}</td>
+                <td>{{emp_data.contact_no}}</td>
+                <td>{{emp_data.email}}</td>
+                <td>{{emp_data.designation}}</td>
+                <td>{{emp_data.department}}</td>
+                <td>{{emp_data.jobs}}</td>
+                <td>{{emp_data.date_of_joining}}</td>
+            </tr>
+        </table>
+        <div class="d-flex align-item-center justify-content-between">
+            <div>
+                <h5>Login Time</h5>
+                <h6>{{t_stamp.login_time}}</h6>
+            </div>
+            <div class="text-right">
+                <h5>Logout Time</h5>
+                <h6>{{t_stamp.logout_time}}</h6>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</html>
