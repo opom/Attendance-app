@@ -26,38 +26,42 @@ def Signup(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
         if form.is_valid():
-            employee = EmployeeRegistration()
-            employee.name = form.cleaned_data['name']
-            employee.contact_no = form.cleaned_data['contact_no']
-            employee.email = form.cleaned_data['email']
-            employee.designation = form.cleaned_data['designation']
-            employee.department = form.cleaned_data['department']
-            employee.jobs = form.cleaned_data['jobs']
-            employee.date_of_joining = form.cleaned_data['date_of_joining']
-            d=str(employee.date_of_joining).split("-")
-            generate = {
-                'intern': 9,
-                'full_time': 1
-            }
-            e_id = str(generate[employee.designation]) + str(randint(100, 999)) + str(d[1]+str(d[0]))
-
-            employee.Employeeid = e_id
-            password = generate_random_password()
-            employee.password = password
-            user = User.objects.create_user(e_id,password=password)
-            employee.user = user
-            employee.save()
-            user.save()
-            body = 'Welcome in Lampros.Tech !!<br> Your Employee Id is :-  ' + e_id + "<br> Your Password is :- " +password
-            if send_mail(form.cleaned_data['email'], body):
-                msg = 'You are Successfully Signup.Please Check your Email for Login.'
-                fm = AuthenticationForm()
-
-                return render(request,'login.html',{'msg':msg,'form':fm})
+            if EmployeeRegistration.objects.filter(email=form.cleaned_data['email']).exists():
+                msg = " your email is already exists"
+                return render(request,'employee.html',{'form': EmployeeForm,'msg': msg})
             else:
-                msg = "you have't signup Properly."
+                employee = EmployeeRegistration()
+                employee.name = form.cleaned_data['name']
+                employee.contact_no = form.cleaned_data['contact_no']
+                employee.email = form.cleaned_data['email']
+                employee.designation = form.cleaned_data['designation']
+                employee.department = form.cleaned_data['department']
+                employee.jobs = form.cleaned_data['jobs']
+                employee.date_of_joining = form.cleaned_data['date_of_joining']
+                d=str(employee.date_of_joining).split("-")
+                generate = {
+                    'Intern': 9,
+                    'Full_time': 1
+                }
+                e_id = str(generate[employee.designation]) + str(randint(100, 999)) + str(d[1]+str(d[0]))
 
-            return render(request,'login.html',{'msg':msg})
+                employee.Employeeid = e_id
+                password = generate_random_password()
+                employee.password = password
+                user = User.objects.create_user(e_id,password=password)
+                employee.user = user
+                employee.save()
+                user.save()
+                body = 'Welcome in Lampros.Tech !!<br> Your Employee Id is :-  ' + e_id + "<br> Your Password is :- " +password
+                if send_mail(form.cleaned_data['email'], body):
+                    msg = 'You are Successfully Signup.Please Check your Email for Login.'
+                    fm = AuthenticationForm()
+
+                    return render(request,'login.html',{'msg':msg,'form':fm})
+                else:
+                    msg = "you have't signup Properly."
+
+                return render(request,'login.html',{'msg':msg})
     else:
         form = EmployeeForm()
 
@@ -127,18 +131,20 @@ def User_login(request):
                     return HttpResponseRedirect('/emp_detail/')
                 else:
                     login(request,user)
-                    exists = Timestamp.objects.filter( Employeeid=request.user.username,
-                                                       login_time__startswith=datetime.date.today())
-                    if exists:
-                        pass
-                    else:
-                        employee = EmployeeRegistration.objects.get(Employeeid=user.username)
-                        time = Timestamp()
-                        time.name = employee.name
-                        time.Employeeid = employee
-                        time.save()
-                    dd = datetime.datetime.now() + datetime.timedelta(hours=12)
-                    scheduler.add_job(logout_update, 'date', run_date=dd, kwargs={'user': user,'request':request},id=user.username)
+                    if not scheduler.get_job(user.username):
+                        exists = Timestamp.objects.filter( Employeeid=request.user.username,
+                                                           login_time__startswith=datetime.date.today())
+                        if exists:
+                            pass
+                        else:
+                            employee = EmployeeRegistration.objects.get(Employeeid=user.username)
+                            time = Timestamp()
+                            time.name = employee.name
+                            time.Employeeid = employee
+                            time.save()
+
+                        dd = datetime.datetime.now() + datetime.timedelta(hours=12)
+                        scheduler.add_job(logout_update, 'date', run_date=dd, kwargs={'user': user,'request':request},id=user.username)
 
                     return HttpResponseRedirect('/profile/')
             else:

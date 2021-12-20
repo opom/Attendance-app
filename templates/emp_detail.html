@@ -8,15 +8,22 @@
     body{
         background: #f9f9f9;
     }
- {
-    <a= align:right;}a
+
+    .logout{
+        float: right;
+        width: 150px;
+        text-align: right;
+        margin: 10px 20px;
+    }
     </style>
     <title>employee_Detail</title>
 </head>
 <body>
+<div class="logout">
+    <a href="{% url 'logout' %}" class="btn btn-success">Logout</a>
+</div>
 <table class="table w-25">
         <tr>
-            <a href="{% url 'logout' %}" class="btn btn-success">Logout</a>
             <th>Name</th>
             <th>Employeeid</th>
         </tr>

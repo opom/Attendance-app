@@ -1,24 +1,25 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 
 import datetime
 
 
 designation_choices = (
-    ('intern', 'Intern'),
-    ('full_time', 'Full Time')
+    ('Intern', 'Intern'),
+    ('Full_time', 'Full Time')
 )
 
 department_choices = (
-    ('software', 'Development & IT'),
-    ('ed_tech', 'Ed-Tech'),
-    ('marketing', 'Marketing'),
-    ('design', 'Designing'),
-    ('content_writing', 'Content-Writing')
+    ('Software', 'Development & IT'),
+    ('Ed-tech', 'Ed-Tech'),
+    ('Marketing', 'Marketing'),
+    ('Design', 'Designing'),
+    ('Content_writing', 'Content-Writing')
 )
 job_choices = (
-    ('on_site', 'Regular'),
-    ('WFH', 'Work From Home')
+    ('Regular', 'Regular'),
+    ('Work From Home', 'Work From Home')
 )
 
 # Signup Page for Employee
@@ -26,7 +27,8 @@ class EmployeeRegistration(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     Employeeid = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
-    contact_no = models.IntegerField(max_length=10)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,12}$')
+    contact_no = models.CharField(validators=[phone_regex], max_length=12, blank=True)
     email= models.EmailField()
     designation = models.CharField(max_length=20, choices=designation_choices, blank=True)
     department = models.CharField(max_length=20, choices=department_choices, blank=True)
@@ -49,13 +51,15 @@ class Timestamp(models.Model):
 
     @property
     def duration(self):
-        return str(self.logout_time - self.login_time)
+        if self.logout_time is not None:
+            return str(self.logout_time - self.login_time)
     @property
     def extraHours(self):
-        if(int(self.duration.split(":")[0]) >= 4):
-            return 1
-        else:
-            return 0
+        if self.logout_time is not None:
+            if(int(self.duration.split(":")[0]) >= 4):
+                return 1
+            else:
+                return 0
 
 
 

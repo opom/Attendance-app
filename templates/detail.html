@@ -116,7 +116,11 @@ $(document).ready(function() {
                     <td>{{data.login_time|time:"h:i:A"}}</td>
                     <td>{{data.logout_time|date:"Y-m-d"}}</td>
                     <td>{{data.logout_time|time:"h:i:A"}}</td>
-                    <td>{{data.duration|split:"."|first}}</td>
+                    {% if data.duration %}
+                        <td>{{data.duration|split:"."|first}}</td>
+                    {% else %}
+                        <td>None</td>
+                    {% endif %}
                     <td>{{data.extraHours}}</td>
 
                 </tr>
