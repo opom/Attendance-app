@@ -24,7 +24,7 @@ def signupform (request):
 # Signup form for employee
 def Signup(request):
     if request.method == 'POST':
-        form = EmployeeForm(request.POST)
+        form = EmployeeForm(request.POST or None)
         if form.is_valid():
             if EmployeeRegistration.objects.filter(email=form.cleaned_data['email']).exists():
                 msg = " your email is already exists"
