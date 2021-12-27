@@ -19,6 +19,8 @@
     <title>employee_Detail</title>
 </head>
 <body>
+            {% csrf_token %}
+
 <div class="logout">
     <a href="{% url 'logout' %}" class="btn btn-success">Logout</a>
 </div>

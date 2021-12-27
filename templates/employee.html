@@ -12,12 +12,14 @@
     }
 </style>
 <body>
+
 <h5 style="position: absolute; ">{{ msg }}</h5>
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-6">
+
             {%load crispy_forms_tags %}
-            <form action="/signup/" method="post">
+            <form action="/signup/" method="post">{% csrf_token %}
             {{ form|crispy }}
             <button type="submit" class="btn btn-success">Signup</button>
         </form>
