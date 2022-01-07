@@ -20,7 +20,7 @@
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://cdn.datatables.net/datetime/1.1.1/js/dataTables.dateTime.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
     <script>
         var minDate, maxDate;
 
@@ -43,8 +43,9 @@ $.fn.dataTable.ext.search.push(
     }
 );
 
-$(document).ready(function() {
-    // Create date inputs
+function initialize(){
+
+        // Create date inputs
     minDate = new DateTime($('#min'), {
         format: 'MMMM Do YYYY'
     });
@@ -59,11 +60,25 @@ $(document).ready(function() {
     $('#min, #max').on('change', function () {
         table.draw();
     });
-});
+}
+$(document).ready(function() {
+
+initialize()
+} );
+
+function exportReportToExcel() {
+  let table = document.getElementsByTagName("table"); // you can use document.getElementById('tableId') as well by providing id to the table tag
+  var name = document.getElementById('name');
+  TableToExcel.convert(table[2], { // html code may contain multiple tables so here we are refering to 1st table tag
+    name: `${name.value}.xlsx`, // fileName you could use any name
+    sheet: {
+      name: 'Sheet 1' // sheetName
+    }
+  });
+}
+
     </script>
 
-
-</head>
 <body>
 <div class="container">
     <div class="row">
@@ -80,6 +95,7 @@ $(document).ready(function() {
                     <th>Date Of Joining</th>
                 </tr>
                 <tr>
+                    <input type="hidden" id="name" value="{{e_data.name}}">
                     <td>{{e_data.name}}</td>
                     <td>{{e_data.contact_no}}</td>
                     <td>{{e_data.email}}</td>
@@ -107,7 +123,7 @@ $(document).ready(function() {
                     <th>Logout Date</th>
                     <th>Logout Time</th>
                     <th>Duration</th>
-                    <th>Days</th>
+                    <th>Shift</th>
                 </tr>
                 </thead>
                  <tbody>
@@ -135,12 +151,14 @@ $(document).ready(function() {
                     <th>Duration</th>
                     <th>Logout Time</th>
                     <th>Duration</th>
-                    <th>Days</th>
+                    <th>Shift</th>
 
                 </tr>
                 </tfoot>
 
             </table>
+            <button id="btnExport" onclick="exportReportToExcel(this)">EXPORT REPORT</button>
+
         </div>
     </div>
 </div>

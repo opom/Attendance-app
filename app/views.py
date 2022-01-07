@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect, redirect
 from django.contrib.auth.forms import PasswordResetForm
 from django.views.decorators.csrf import csrf_protect
-
+import csv
 import random
 from .forms import EmployeeForm
 from django.http import HttpResponse
@@ -155,9 +155,9 @@ def User_login(request):
                             time.Employeeid = employee
                             time.save()
 
-                        dd = datetime.datetime.now() + datetime.timedelta(hours=12)
-                        scheduler.add_job(logout_update, 'date', run_date=dd, kwargs={'user': user, 'request': request},
-                                          id=user.username)
+                            dd = datetime.datetime.now() + datetime.timedelta(hours=12)
+                            scheduler.add_job(logout_update, 'date', run_date=dd, kwargs={'user': user, 'request': request},
+                                              id=user.username)
 
                     return HttpResponseRedirect('/profile/')
             else:
@@ -195,12 +195,12 @@ def logout_view(request):
 
 def logout_update(user, request):
     now = datetime.datetime.now()
-    print("in")
     time = Timestamp.objects.filter(Employeeid=user.username).last()
     time.logout_time = now
     time.save()
-    logout(request)
     scheduler.remove_job(user.username)
+    logout(request)
+
 
 
 
@@ -295,3 +295,14 @@ def send_mail_custom(email, body):
         return True
     else:
         return False
+
+# Download employee working days
+
+def download(request):
+    response = HttpResponse(
+        content_type='text/csv',
+        headers={'Content-Disposition': 'attachment; filename="employee.csv"'},
+    )
+    e_data = EmployeeRegistration.objects.get(Employeeid=id)
+    return response
+

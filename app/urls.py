@@ -14,6 +14,7 @@ urlpatterns= [
     #path('timestamp/',views.timestamp,name='timestamp'),
     path('emp_detail/',views.employee_detail,name='emp_detail'),
     path('detail/',views.detail,name='detail'),
+    path('download/',views.download,name='download'),
     path('changepassword/',views.change_password,name='changepassword'),
     path("password_reset/", views.password_reset_request, name="password_reset")
 

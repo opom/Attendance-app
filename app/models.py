@@ -56,10 +56,10 @@ class Timestamp(models.Model):
     @property
     def extraHours(self):
         if self.logout_time is not None:
-            if(int(self.duration.split(":")[0]) >= 4):
-                return 1
+            if(int(self.duration.split(":")[0]) >= 5):
+                return 2
             else:
-                return 0
+                return 1
 
 
 
